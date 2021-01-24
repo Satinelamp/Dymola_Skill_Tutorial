@@ -1,0 +1,8 @@
+﻿LibraryInfoMenuCommand(
+  category="libraries",
+  text="Dymola Skill Tutorial",
+  reference="Dymola Skill Tutorial",
+  isModel=true,
+  description="For Tutorial",
+  ModelicaVersion=">= 3.2.3",
+  pos=100002);

@@ -1,0 +1,7 @@
+﻿openModel("D:/Dymola_working_space/Dymola_Skill_Tutorial.mo");
+translateModel ("Dymola_Skill_Tutorial.Example_1.Test1");
+for i in 1:5 loop
+        a=i;
+        simulate();
+        system("copy dsres.mat results"+String(i) +".mat");
+end for;

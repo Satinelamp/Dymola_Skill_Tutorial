@@ -1,0 +1,13 @@
+﻿// CALCULATE INITIAL STATES TO START BATCH FROM
+translateModel("Dymola_Skill_Tutorial.Example_2.PumpingSystem");
+simulateModel("Dymola_Skill_Tutorial.Example_2.PumpingSystem", method="dassl", resultFile="PumpingSystem");
+// Store the final states under a different name to avoid overwriting
+system("copy dsfinal.txt dsfinal_1.txt")// Store 10 results filesplotSetFilesToKeep(10);
+
+// BATCH SIMULATE
+for i in 2:4 loop
+  // Load initial values with dsfinal_1.txt values
+  importInitial("dsfinal.txt");
+  simulate();      // Simulate the model
+  system("copy dsfinal.txt dsfinal_"+String(i) +".txt");
+end for;

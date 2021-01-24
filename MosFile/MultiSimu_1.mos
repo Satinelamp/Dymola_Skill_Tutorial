@@ -1,0 +1,9 @@
+﻿//openModel("D:/Dymola_working_space/Dymola_Skill_Tutorial.mo");
+for i in 1:5 loop
+        simulateExtendedModel(
+        "Dymola_Skill_Tutorial.Example_1.Test1",
+        initialNames={"a"},
+        initialValues={i},
+        finalNames={"x", "y"},
+        resultFile="test"+String(i));
+end for;
