@@ -1,0 +1,6 @@
+EXPORTS
+	ED_createINI
+	ED_destroyINI
+	ED_getDoubleFromINI
+	ED_getStringFromINI
+	ED_getIntFromINI

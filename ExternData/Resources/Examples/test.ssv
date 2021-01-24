@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?><!-- test.ssv -->
+<ssv:ParameterSet version="Draft20171219" name="set1"
+    xmlns:ssv="http://ssp-standard.org/SSP1/SystemStructureParameterValues"
+    xmlns:ssc="http://ssp-standard.org/SSP1/SystemStructureCommon"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <ssv:Parameters>
+        <ssv:Parameter name="gain.k">
+            <ssv:Real value="2"/>
+        </ssv:Parameter>
+        <ssv:Parameter name="clock.offset">
+            <ssv:Real value="0.1"/>
+        </ssv:Parameter>
+    </ssv:Parameters>
+</ssv:ParameterSet>

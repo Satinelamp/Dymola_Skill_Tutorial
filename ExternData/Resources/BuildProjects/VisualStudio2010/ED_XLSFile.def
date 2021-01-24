@@ -1,0 +1,8 @@
+EXPORTS
+	ED_createXLS
+	ED_destroyXLS
+	ED_getDoubleFromXLS
+	ED_getStringFromXLS
+	ED_getIntFromXLS
+	ED_getDoubleArray2DFromXLS
+	ED_getArray2DDimensionsFromXLS
