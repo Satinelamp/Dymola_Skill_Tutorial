@@ -769,6 +769,100 @@ Simulate for 2000 s. When the valve is opened at time t=200, the pump starts tur
 <p>This Modelica package is created for illustration about how to automate experiment workflow.</p>
 </html>"),   conversion(noneFromVersion=""));
   end Example_8;
+
+  package CompareText
+    "An example show how to use text editor to compare differences in two models"
+    extends Modelica.Icons.ExamplesPackage;
+    model Failure
+      extends Modelica.Icons.Example;
+      Modelica.Fluid.Sources.FixedBoundary inletBoundary(
+        p=500000,
+        T=298.15,
+        redeclare package Medium = Medium,
+        nPorts=1)
+        annotation (Placement(transformation(extent={{-66,-12},{-46,8}})));
+      replaceable package Medium = Modelica.Media.Water.StandardWater annotation (
+          __Dymola_choicesAllMatching=true);
+      Modelica.Fluid.Sources.FixedBoundary outletBoundary1(
+        p=500000,
+        T=298.15,
+        redeclare package Medium = Medium,
+        nPorts=1) annotation (Placement(transformation(
+            extent={{-10,-10},{10,10}},
+            rotation=180,
+            origin={70,-2})));
+      inner Modelica.Fluid.System system(allowFlowReversal=false, m_flow_start=10)
+        annotation (Placement(transformation(extent={{50,14},{70,34}})));
+      Modelica.Fluid.Machines.PrescribedPump pump(
+        redeclare package Medium = Medium,
+        p_b_start=600000,
+        redeclare function flowCharacteristic =
+            Modelica.Fluid.Machines.BaseClasses.PumpCharacteristics.quadraticFlow,
+        N_nominal=1200,
+        checkValve=true,
+        V=50,
+        energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
+        massDynamics=Modelica.Fluid.Types.Dynamics.DynamicFreeInitial)
+        annotation (Placement(transformation(extent={{-10,-12},{10,8}})));
+    equation
+      connect(inletBoundary.ports[1], pump.port_a)
+        annotation (Line(points={{-46,-2},{-10,-2}}, color={0,127,255}));
+      connect(pump.port_b, outletBoundary1.ports[1])
+        annotation (Line(points={{10,-2},{60,-2}}, color={0,127,255}));
+      annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
+            coordinateSystem(preserveAspectRatio=false)));
+    end Failure;
+
+    model Success
+      extends Modelica.Icons.Example;
+      Modelica.Fluid.Sources.FixedBoundary inletBoundary(
+        p=500000,
+        T=298.15,
+        redeclare package Medium = Medium,
+        nPorts=1)
+        annotation (Placement(transformation(extent={{-70,-8},{-50,12}})));
+      replaceable package Medium = Modelica.Media.Water.StandardWater annotation (
+          __Dymola_choicesAllMatching=true);
+      Modelica.Fluid.Sources.FixedBoundary outletBoundary(
+        p=500000,
+        T=298.15,
+        redeclare package Medium = Medium,
+        nPorts=1) annotation (Placement(transformation(
+            extent={{-10,-10},{10,10}},
+            rotation=180,
+            origin={66,2})));
+      inner Modelica.Fluid.System system(allowFlowReversal=false, m_flow_start=10)
+        annotation (Placement(transformation(extent={{46,18},{66,38}})));
+      Modelica.Fluid.Machines.PrescribedPump pump(
+        checkValve=true,
+        N_nominal=1200,
+        redeclare function flowCharacteristic =
+            Modelica.Fluid.Machines.BaseClasses.PumpCharacteristics.quadraticFlow
+            (V_flow_nominal={0,0.25,0.5}, head_nominal={100,60,0}),
+        nParallel=1,
+        energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
+        V(displayUnit="l") = 0.05,
+        massDynamics=Modelica.Fluid.Types.Dynamics.DynamicFreeInitial,
+        redeclare package Medium = Medium,
+        p_b_start=600000,
+        T_start=system.T_start)
+        annotation (Placement(transformation(extent={{-16,-8},{4,12}})));
+    equation
+      connect(inletBoundary.ports[1], pump.port_a)
+        annotation (Line(points={{-50,2},{-16,2}}, color={0,127,255}));
+      connect(outletBoundary.ports[1], pump.port_b)
+        annotation (Line(points={{56,2},{4,2}}, color={0,127,255}));
+      annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
+            coordinateSystem(preserveAspectRatio=false)));
+    end Success;
+    annotation (Documentation(info="<html>
+<p>Here is the screenshot of comparing differences between two models in Visual Studio Code editor.</p>
+<p>
+<img src=\"modelica://Dymola_Skill_Tutorial/data/compareText.png\">
+</p>
+
+</html>"));
+  end CompareText;
   annotation (uses(Modelica(version="3.2.3"),
               ExternData(version="2.5.0"),
               DymolaCommands(version="1.9"),
