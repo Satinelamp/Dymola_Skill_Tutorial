@@ -863,6 +863,102 @@ Simulate for 2000 s. When the valve is opened at time t=200, the pump starts tur
 
 </html>"));
   end CompareText;
+
+  package PantelidesAlgorithm "Pantelides Algorithm example"
+    extends Modelica.Icons.ExamplesPackage;
+
+    model TwoTanks "An example about Pantelides Algorithm, it is necessary to use this example
+  with some appropriate debug settings"
+      extends Modelica.Icons.Example;
+      import SI = Modelica.SIunits;
+      SI.Pressure p1;
+      SI.Pressure p2;
+      SI.Pressure pS;
+      SI.VolumeFlowRate Fv;
+      SI.VolumeFlowRate Fv1;
+      SI.VolumeFlowRate Fv2;
+      parameter Real C1(unit="m3/Pa") = 1e-5;
+      parameter Real C2(unit="m3/Pa") = 3e-5;
+    equation
+      C1*der(p1) = Fv1;
+      C2*der(p2) = Fv2;
+      pS = p1;
+      p1 = p2;
+      Fv = Fv1 + Fv2;
+      Fv = sin(time);
+    end TwoTanks;
+    annotation (Documentation(info="<html>
+
+
+</html>"));
+  end PantelidesAlgorithm;
+
+  package DynamicSateSelection "Dynamic sate selection example"
+    extends Modelica.Icons.ExamplesPackage;
+
+    model pendulumSelecDinVE "An example about Dynamic sate selection, it is necessary to use this example
+  with some appropriate debug settings"
+      extends Modelica.Icons.Example;
+      constant Real g(unit="m/s2") = 9.81;
+      parameter Real L(unit="m") = 1;
+      parameter Real m(unit="kg") = 5;
+      Real x(
+        unit="m",
+        start=0.9,
+        fixed=true);
+      Real y(
+        unit="m",
+        start=0.5,
+        fixed=false);
+      Real vx(unit="m/s");
+      Real vy(
+        unit="m/s",
+        start=0,
+        fixed=true);
+      Real F(unit="N");
+    equation
+      m*der(vx) = -x/L*F;
+      m*der(vy) = -y/L*F - m*g;
+      x^2 + y^2 = L^2;
+      der(x) = vx;
+      der(y) = vy;
+    end pendulumSelecDinVE;
+    annotation (Documentation(info="<html>
+
+
+</html>"));
+  end DynamicSateSelection;
+
+  package SaveTranslationBlog "Save Translation Blog example"
+    extends Modelica.Icons.ExamplesPackage;
+
+    function saveBlog
+      "An example of how to save translation and simulation blog together"
+      import Modelica.Utilities.Streams.print;
+
+      output Boolean success;
+
+    algorithm
+      Advanced.TranslationInCommandLog := true;
+
+      clearlog();
+
+      // Run the simulation
+      success := simulateModel(
+        "Modelica.Mechanics.MultiBody.Examples.Elementary.DoublePendulum",
+        stopTime=3,
+        numberOfIntervals=500,
+        method="Dassl",
+        resultFile="MyDoublePendulum");
+
+      savelog("./MyDoublePendulum_Log.txt");
+
+    end saveBlog;
+    annotation (Documentation(info="<html>
+
+
+</html>"));
+  end SaveTranslationBlog;
   annotation (uses(Modelica(version="3.2.3"),
               ExternData(version="2.5.0"),
               DymolaCommands(version="1.9"),
