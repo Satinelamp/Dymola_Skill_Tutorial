@@ -1000,6 +1000,75 @@ Simulate for 2000 s. When the valve is opened at time t=200, the pump starts tur
 
 </html>"));
   end HowToUseIf;
+
+  package WhichComponentUsingOuterComponents
+    "How to find which component is using outer components in Dymola?"
+    extends Modelica.Icons.ExamplesPackage;
+    function getComponentsUsingClass "Get all components in class c1 which use class c2 as local component"
+      import ModelManagement.Structure.AST;
+      import Testing.Utilities.Class.getExtendedClasses;
+      import Testing.Utilities.Vectors.catStrings;
+
+      input String c1 "Full path of class of which components are retrieved";
+      input String c2 "Full path of class which must be used in the components";
+      input Boolean isOuter=false "Return only components where c2 is used as an outer instance";
+      output String cmp[:] "All components in c1 using c2";
+    protected
+      String sub[:] "Sub-components";
+      Boolean baseClass "True if current class is a baseClass of c1 (c1 extends it)";
+      String prefix "Used to give base classe";
+    algorithm
+
+      cmp :=fill("", 0);
+
+      // loop over class c1 and all its base classes
+      for c in cat(1,{c1}, getExtendedClasses(c1)) loop
+
+        baseClass :=c <> c1;
+        prefix :=if baseClass then "<" + c + ">." else ".";
+
+        // loop over all components in the current class
+        for cmpa in AST.ComponentsInClassAttributes(c) loop
+
+          if cmpa.fullTypeName==c2 and cmpa.isOuter==isOuter then
+            cmp :=cat(1, cmp, {prefix+cmpa.name});
+          end if;
+
+          // if the current component is a Modelica class, obtain all sub-components using c2
+          // (Mon-Modelica classes would e.g. be the attributes min, max, stateSelect etc. of built in classes)
+          if cmpa.fullTypeName<>"" then
+            sub := getComponentsUsingClass(cmpa.fullTypeName, c2, isOuter);
+            sub :=catStrings(fill(prefix+cmpa.name, size(sub, 1)), sub);
+            cmp :=cat(1, cmp, sub);
+          end if;
+        end for;
+      end for;
+    end getComponentsUsingClass;
+
+    function printComponents
+      import Modelica.Utilities.Streams.print;
+      import DymolaModels.Utilities.Strings.stripLeft;
+      input String c1="Modelica.Fluid.Examples.HeatingSystem" "Full path of class of which components are retrieved";
+      input String c2="Modelica.Fluid.System" "Full path of class which must be used in the components";
+      input Boolean isOuter=true "Return only components where c2 is used as an outer instance";
+    algorithm
+
+      print("Components in " + c1 + " using " + c2 + (if isOuter then " as outer" else "") + ":");
+
+      for c in getComponentsUsingClass(c1, c2,isOuter) loop
+        print("  " + stripLeft(c, "."));
+      end for;
+    end printComponents;
+    annotation (Documentation(info="<html>
+<p>
+This is an example about \"How to find which component is using outer components in Dymola?\"
+The detailed illustration about this example could be found at 
+<a href=\"https://stackoverflow.com/questions/65857118/how-to-find-which-component-is-using-outer-components-in-dymola\">StackOverflow.</a>
+
+</p>
+
+</html>"));
+  end WhichComponentUsingOuterComponents;
   annotation (uses(Modelica(version="3.2.3"),
               ExternData(version="2.5.0"),
               DymolaCommands(version="1.9"),
