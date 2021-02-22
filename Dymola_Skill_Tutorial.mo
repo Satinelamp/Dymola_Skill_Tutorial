@@ -959,6 +959,47 @@ Simulate for 2000 s. When the valve is opened at time t=200, the pump starts tur
 
 </html>"));
   end SaveTranslationBlog;
+
+  package AvoidZeroDivision "Avoid Zero Division example"
+    extends Modelica.Icons.ExamplesPackage;
+
+    model HowToExpressDerivative
+      "dy/dx=5, how to describe this equation in Modelica?"
+      extends Modelica.Icons.Example;
+      Real a,b;
+      Real x,y;
+    equation
+      a=time;
+      der(b)=5;
+      x=time^2;
+      der(y)/der(x)=5;
+    end HowToExpressDerivative;
+    annotation (Documentation(info="<html>
+
+
+</html>"));
+  end AvoidZeroDivision;
+
+  package HowToUseIf "How To Use If operator example"
+    extends Modelica.Icons.ExamplesPackage;
+
+    model ErrorWhenUsingIf
+      extends Modelica.Icons.Example;
+      Real x(start=100);
+      Real z;
+    equation
+      if time<=0.5 then
+        x=100;
+      else
+        der(x)=5;
+      end if;
+      der(z)=0;
+    end ErrorWhenUsingIf;
+    annotation (Documentation(info="<html>
+
+
+</html>"));
+  end HowToUseIf;
   annotation (uses(Modelica(version="3.2.3"),
               ExternData(version="2.5.0"),
               DymolaCommands(version="1.9"),
